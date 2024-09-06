@@ -12,7 +12,7 @@ import ArgumentParser
 struct Very: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         abstract: "Swift Package Manager utilities.",
-        version: "0.1.0",
+        version: "0.1.1",
         subcommands: [Build.self, Reset.self]
     )
 }

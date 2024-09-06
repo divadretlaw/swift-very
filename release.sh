@@ -13,11 +13,12 @@ swift build -c release --arch arm64 --arch x86_64 | xcbeautify --disable-logging
 mkdir -p .build/output
 
 cp .build/apple/Products/Release/swift-very .build/output/swift-very
+cp .build/apple/Products/Release/libSwiftPM.dylib .build/output/libSwiftPM.dylib
 
 cd .build/output
 
 # Zip
-zip swift-very.zip swift-very
+zip swift-very.zip swift-very libSwiftPM.dylib
 
 # SHA256
 
