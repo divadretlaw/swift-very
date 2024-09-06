@@ -1,12 +1,14 @@
 #!/bin/sh
 
+set -e
+
 tag=$1
 
 # Cleanup
 rm -rf .build/output
 
 # Build
-swift build -c release --arch arm64 --arch x86_64
+swift build -c release --arch arm64 --arch x86_64 | xcbeautify --disable-logging
 
 mkdir -p .build/output
 
@@ -16,8 +18,6 @@ cd .build/output
 
 # Zip
 zip swift-very.zip swift-very
-
-cd .build/output
 
 # SHA256
 
