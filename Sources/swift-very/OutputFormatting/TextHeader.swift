@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  TextHeader.swift
 //  swift-very
 //
 //  Created by David Walter on 06.09.24.

@@ -75,25 +75,3 @@ struct Printer {
         }
     }
 }
-
-func > (lhs: Command, rhs: Printer) async throws {
-    let pipe = if lhs.process.isRunning {
-        lhs.output
-    } else {
-        try lhs.run()
-    }
-    for await output in rhs.run(input: pipe) {
-        switch output {
-        case .launched:
-            break
-        case .output(let string):
-            print(string)
-            fflush(stdout)
-        case .error(let string):
-            print(string)
-            fflush(stderr)
-        case .terminated:
-            break
-        }
-    }
-}

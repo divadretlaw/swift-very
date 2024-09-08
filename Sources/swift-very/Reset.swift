@@ -10,12 +10,12 @@ import ArgumentParser
 
 struct Reset: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
-        abstract: "Development utilities.",
+        abstract: "Reset caches.",
         subcommands: [PackageCache.self, DerivedData.self]
     )
     
     struct PackageCache: AsyncParsableCommand {
-        static let configuration = CommandConfiguration(abstract: "Clear Package Cache")
+        static let configuration = CommandConfiguration(abstract: "Clear Swift Package Manager Caches")
         
         mutating func run() async throws {
             let cache = FileManager.default.homeDirectoryForCurrentUser

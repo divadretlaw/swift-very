@@ -10,17 +10,31 @@ import PackageModel
 
 extension PlatformDescription: CustomStringConvertible {
     var formattedPlatformName: String {
-        switch platformName {
+        switch platformName.lowercased() {
         case "ios":
             "iOS"
         case "macos":
             "macOS"
+        case "maccatalyst":
+            "Mac Catalyst"
         case "tvos":
             "tvOS"
         case "watchos":
             "watchOS"
         case "visionos":
             "visionOS"
+        case "driverkit":
+            "DriverKit"
+        case "linux":
+            "Linux"
+        case "windows":
+            "Windows"
+        case "android":
+            "Android"
+        case "wasi":
+            "WebAssembly System Interface"
+        case "openbsd":
+            "OpenBSD"
         default:
             platformName
         }

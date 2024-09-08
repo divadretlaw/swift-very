@@ -8,6 +8,8 @@
 import Foundation
 
 struct XcodeBuild: Command {
+    static var command: String { "xcodebuild" }
+    
     let output: Pipe
     let process: Process
     
