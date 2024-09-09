@@ -7,19 +7,16 @@
 
 import Foundation
 
-struct XCBeautify: Command {
+struct XCBeautify: Executable {
     static var command: String { "xcbeautify" }
     
-    let output: Pipe
-    let process: Process
+    let command: Command
     
     init() {
-        let output = Pipe()
-        let process = Process()
-        process.launchPath = "/usr/bin/env"
-        process.arguments = ["xcbeautify", "--disable-logging"]
-        process.standardOutput = output
-        self.output = output
-        self.process = process
+        self.command = Command("xcbeautify", "--disable-logging")
+    }
+    
+    static func check() -> Bool {
+        Which(command: "xcbeautify").run()
     }
 }

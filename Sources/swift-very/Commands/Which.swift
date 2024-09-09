@@ -7,19 +7,27 @@
 
 import Foundation
 
-struct Which: Command {
-    static var command: String { "which" }
-    
+struct Which {
     let output: Pipe
     let process: Process
     
-    init(arguments: [String]) {
+    init(command: String) {
         let output = Pipe()
         let process = Process()
         process.launchPath = "/usr/bin/env"
-        process.arguments = ["which"] + arguments
+        process.arguments = ["which", command]
         process.standardOutput = output
         self.output = output
         self.process = process
+    }
+    
+    func run() -> Bool {
+        do {
+            try process.run()
+            process.waitUntilExit()
+            return process.terminationStatus == 0
+        } catch {
+            return false
+        }
     }
 }

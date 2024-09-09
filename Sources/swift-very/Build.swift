@@ -66,12 +66,12 @@ struct Build: AsyncParsableCommand {
                     clean: clean
                 )
                 
-                let command = if isXcbeautifyAvailable {
-                    try xcodebuild.pipe(XCBeautify())
+                let task = if isXcbeautifyAvailable {
+                    try xcodebuild | XCBeautify()
                 } else {
                     xcodebuild
                 }
-                let task = try await command.capture()
+                try await task.runAndPrint()
                 summary.addRow("'\(scheme)' for \(platform.formattedPlatformName)", task.isSuccess ? "Success" : "Failure")
             }
         } else {
@@ -86,13 +86,12 @@ struct Build: AsyncParsableCommand {
                         clean: clean
                     )
                     
-                    let command = if isXcbeautifyAvailable {
-                        try xcodebuild.pipe(XCBeautify())
+                    let task = if isXcbeautifyAvailable {
+                        try xcodebuild | XCBeautify()
                     } else {
                         xcodebuild
                     }
-                    
-                    let task = try await command.capture()
+                    try await task.runAndPrint()
                     summary.addRow("'\(target.name)' for \(platform.formattedPlatformName)", task.isSuccess ? "Success" : "Failure")
                 }
             }

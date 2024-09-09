@@ -7,21 +7,11 @@
 
 import Foundation
 
-struct XcodeBuild: Command {
-    static var command: String { "xcodebuild" }
-    
-    let output: Pipe
-    let process: Process
+struct XcodeBuild: Executable {    
+    let command: Command
     
     init(directory: URL? = nil, arguments: [String]) {
-        let output = Pipe()
-        let process = Process()
-        process.currentDirectoryURL = directory
-        process.launchPath = "/usr/bin/env"
-        process.arguments = ["xcodebuild"] + arguments
-        process.standardOutput = output
-        self.output = output
-        self.process = process
+        self.command = Command(arguments: ["xcodebuild"] + arguments, currentDirectoryURL: directory)
     }
     
     static func build(directory: URL? = nil, scheme: String, destination: String, clean: Bool = false) -> Self {

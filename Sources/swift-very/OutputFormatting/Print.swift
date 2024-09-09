@@ -1,5 +1,5 @@
 //
-//  PrintError.swift
+//  Print.swift
 //  swift-very
 //
 //  Created by David Walter on 07.09.24.

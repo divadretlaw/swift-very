@@ -1,29 +1,55 @@
 //
-//  Command.swift
+//  Comand.swift
 //  swift-very
 //
-//  Created by David Walter on 05.09.24.
+//  Created by David Walter on 08.09.24.
 //
 
 import Foundation
 
-protocol Command {
-    static var command: String { get }
+struct Command: Executable {
+    enum Output: Hashable, Equatable, Sendable {
+        /// The process wrote to `stdout`
+        case output(Data)
+        /// The process wrote to `stderr`
+        case error(Data)
+    }
     
-    var output: Pipe { get }
-    var process: Process { get }
-}
-
-extension Command {
-    static func check() -> Bool {
-        do {
-            let command = Which(arguments: [command])
-            try command.run()
-            command.waitUntilExit()
-            return command.isSuccess
-        } catch {
-            return false
-        }
+    enum Error: Swift.Error {
+        case terminated(Int32, stderr: String)
+        case signalled(Int32)
+        case notFound
+    }
+    
+    private let process: Process
+    
+    var command: Command { self }
+    
+    init(
+        _ arguments: String...,
+        currentDirectoryURL: URL? = URL(filePath: FileManager.default.currentDirectoryPath),
+        environment: [String: String] = ProcessInfo.processInfo.environment
+    ) {
+        self.init(
+            arguments: arguments,
+            currentDirectoryURL: currentDirectoryURL,
+            environment: environment
+        )
+    }
+    
+    init(
+        arguments: [String],
+        currentDirectoryURL: URL? = URL(filePath: FileManager.default.currentDirectoryPath),
+        environment: [String: String] = ProcessInfo.processInfo.environment
+    ) {
+        let process = Process()
+        
+        process.executableURL = URL(filePath: "/usr/bin/env")
+        process.arguments = arguments
+        process.currentDirectoryURL = currentDirectoryURL
+        process.environment = environment
+        
+        self.process = process
     }
     
     var isSuccess: Bool {
@@ -31,54 +57,103 @@ extension Command {
         return process.terminationStatus == 0
     }
     
-    @discardableResult func run() throws -> Pipe {
-        try run(input: nil)
-    }
-    
-    @discardableResult func run(input: Pipe?) throws -> Pipe {
-        if let input {
-            process.standardInput = input
-        }
+    func pipe(_ other: Executable) throws -> Executable {
+        let pipe = Pipe()
+        process.standardOutput = pipe
+        other.command.process.standardInput = pipe
         try process.run()
-        return output
+        return other
     }
     
-    func waitUntilExit() {
-        process.waitUntilExit()
-    }
-    
-    func pipe(_ command: Command) throws -> Command {
-        let pipe = if process.isRunning {
-            output
-        } else {
-            try run()
-        }
-        command.process.standardInput = pipe
-        return command
-    }
-    
-    func capture() async throws -> Command {
-        let printer = Printer()
-        let pipe = if process.isRunning {
-            output
-        } else {
-            try run()
-        }
-        
-        for await output in printer.run(input: pipe) {
-            switch output {
-            case .launched:
-                break
-            case .output(let string):
-                print(string)
-                fflush(stdout)
-            case .error(let string):
-                print(string)
-                fflush(stderr)
-            case .terminated:
-                break
+    func run() -> AsyncThrowingStream<Output, Swift.Error> {
+        AsyncThrowingStream(Output.self, bufferingPolicy: .unbounded) { continuation in
+            continuation.onTermination = { termination in
+                switch termination {
+                case .cancelled:
+                    if process.isRunning {
+                        process.terminate()
+                    }
+                default:
+                    break
+                }
+            }
+            
+            var error = ""
+            let stdoutPipe = Pipe()
+            let stderrPipe = Pipe()
+            
+            stdoutPipe.fileHandleForReading.readabilityHandler = { handle in
+                let data = handle.availableData
+                if !data.isEmpty {
+                    continuation.yield(.output(data))
+                }
+            }
+            
+            stderrPipe.fileHandleForReading.readabilityHandler = { handle in
+                let data = handle.availableData
+                if !data.isEmpty, let output = String(data: data, encoding: .utf8) {
+                    error.append(output)
+                }
+            }
+            
+            process.standardOutput = stdoutPipe
+            process.standardError = stderrPipe
+            
+            do {
+                if !process.isRunning {
+                    try process.run()
+                }
+                process.waitUntilExit()
+                
+                if let data = try? stdoutPipe.fileHandleForReading.readToEnd(), !data.isEmpty {
+                    continuation.yield(.output(data))
+                }
+                
+                if let data = try? stderrPipe.fileHandleForReading.readToEnd(), !data.isEmpty {
+                    continuation.yield(.error(data))
+                    if let output = String(data: data, encoding: .utf8) {
+                        error.append(output)
+                    }
+                }
+                
+                switch process.terminationReason {
+                case .exit:
+                    switch process.terminationStatus {
+                    case 0:
+                        break
+                    case 127:
+                        throw Error.notFound
+                    default:
+                        throw Error.terminated(process.terminationStatus, stderr: error)
+                    }
+                case .uncaughtSignal:
+                    if process.terminationStatus != 0 {
+                        throw Error.signalled(process.terminationStatus)
+                    }
+                @unknown default:
+                    break
+                }
+                continuation.finish()
+            } catch {
+                continuation.finish(throwing: error)
             }
         }
-        return self
+    }
+    
+    func runAndPrint() async throws {
+        for try await output in run() {
+            switch output {
+            case let .output(data):
+                if let string = String(data: data, encoding: .utf8) {
+                    print(string)
+                    fflush(stdout)
+                }
+            case let .error(data):
+                if let string = String(data: data, encoding: .utf8) {
+                    printError(string)
+                    fflush(stderr)
+                }
+            }
+        }
     }
 }
