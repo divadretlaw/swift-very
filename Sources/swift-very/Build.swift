@@ -75,25 +75,20 @@ struct Build: AsyncParsableCommand {
                 
                 do {
                     try await task()
-                } catch let error as ShellError {
-                    switch error {
-                    case .terminated(let status, _):
-                        summary.addRow("'\(scheme)' for \(platform.formattedPlatformName)", status == 0 ? "Success" : "Failure")
-                    case .signalled:
-                        throw error
-                    }
+                    summary.addRow("'\(scheme)' for \(platform.formattedPlatformName)", "Success")
                 } catch {
-                    throw error
+                    summary.addRow("'\(scheme)' for \(platform.formattedPlatformName)", "Failure")
                 }
             }
         } else {
-            for target in manifest.targets {
+            let schemes = try await XcodeBuild.listSchemes(directory: directory)
+            for scheme in schemes {
                 for platform in manifest.platforms {
-                    printHeader("Step: Building '\(target.name)' for \(platform.formattedPlatformName)")
+                    printHeader("Step: Building '\(scheme)' for \(platform.formattedPlatformName)")
                     
                     let xcodebuild = XcodeBuild.build(
                         directory: directory,
-                        scheme: target.name,
+                        scheme: scheme,
                         destination: "generic/platform=\(platform.platformName)",
                         clean: clean
                     )
@@ -106,15 +101,9 @@ struct Build: AsyncParsableCommand {
                     
                     do {
                         try await task()
-                    } catch let error as ShellError {
-                        switch error {
-                        case .terminated(let status, _):
-                            summary.addRow("'\(target.name)' for \(platform.formattedPlatformName)", status == 0 ? "Success" : "Failure")
-                        case .signalled:
-                            throw error
-                        }
+                        summary.addRow("'\(scheme)' for \(platform.formattedPlatformName)", "Success")
                     } catch {
-                        throw error
+                        summary.addRow("'\(scheme)' for \(platform.formattedPlatformName)", "Failure")
                     }
                 }
             }
