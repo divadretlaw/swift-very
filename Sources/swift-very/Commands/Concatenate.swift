@@ -6,10 +6,9 @@
 //
 
 import Foundation
+import Shell
 
-struct Concatenate: Executable {
-    static var command: String { "cat" }
-    
+struct Concatenate: CommandRunnable {    
     let command: Command
     
     init() {

@@ -7,6 +7,7 @@
 
 import Foundation
 import ArgumentParser
+import Shell
 import Rainbow
 import Basics
 import Workspace
@@ -67,12 +68,23 @@ struct Build: AsyncParsableCommand {
                 )
                 
                 let task = if isXcbeautifyAvailable {
-                    try xcodebuild | XCBeautify()
+                    xcodebuild | XCBeautify()
                 } else {
                     xcodebuild
                 }
-                try await task.runAndPrint()
-                summary.addRow("'\(scheme)' for \(platform.formattedPlatformName)", task.isSuccess ? "Success" : "Failure")
+                
+                do {
+                    try await task()
+                } catch let error as ShellError {
+                    switch error {
+                    case .terminated(let status, _):
+                        summary.addRow("'\(scheme)' for \(platform.formattedPlatformName)", status == 0 ? "Success" : "Failure")
+                    case .signalled:
+                        throw error
+                    }
+                } catch {
+                    throw error
+                }
             }
         } else {
             for target in manifest.targets {
@@ -87,12 +99,23 @@ struct Build: AsyncParsableCommand {
                     )
                     
                     let task = if isXcbeautifyAvailable {
-                        try xcodebuild | XCBeautify()
+                        xcodebuild | XCBeautify()
                     } else {
                         xcodebuild
                     }
-                    try await task.runAndPrint()
-                    summary.addRow("'\(target.name)' for \(platform.formattedPlatformName)", task.isSuccess ? "Success" : "Failure")
+                    
+                    do {
+                        try await task()
+                    } catch let error as ShellError {
+                        switch error {
+                        case .terminated(let status, _):
+                            summary.addRow("'\(target.name)' for \(platform.formattedPlatformName)", status == 0 ? "Success" : "Failure")
+                        case .signalled:
+                            throw error
+                        }
+                    } catch {
+                        throw error
+                    }
                 }
             }
         }

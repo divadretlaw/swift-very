@@ -1,5 +1,5 @@
 {
-  "originHash" : "b48eb9a101edabb98da573f4e12af0f8cca12ee21c8483ac35bc6839bea870e7",
+  "originHash" : "84a56060328afc5bd3ca07159f58c9e018e3f25ae0bd6d2c148357b9b1688fa8",
   "pins" : [
     {
       "identity" : "rainbow",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "e0dada9cd44e3fa7ec3b867e49a8ddbf543e3df3",
         "version" : "4.0.1"
+      }
+    },
+    {
+      "identity" : "shell",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/divadretlaw/Shell",
+      "state" : {
+        "revision" : "241634b444bf6eec4eb95bcfcfb686ced9ab8f29",
+        "version" : "0.2.0"
       }
     },
     {

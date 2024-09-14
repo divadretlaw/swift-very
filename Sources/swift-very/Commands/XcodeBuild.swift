@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import Shell
 
-struct XcodeBuild: Executable {    
+struct XcodeBuild: CommandRunnable {
     let command: Command
     
     init(directory: URL? = nil, arguments: [String]) {

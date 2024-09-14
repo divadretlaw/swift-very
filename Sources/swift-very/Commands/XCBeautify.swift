@@ -6,10 +6,9 @@
 //
 
 import Foundation
+import Shell
 
-struct XCBeautify: Executable {
-    static var command: String { "xcbeautify" }
-    
+struct XCBeautify: CommandRunnable {    
     let command: Command
     
     init() {

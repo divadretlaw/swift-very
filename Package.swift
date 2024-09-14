@@ -10,6 +10,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.0"),
+        .package(url: "https://github.com/divadretlaw/Shell", from: "0.1.0"),
         .package(url: "https://github.com/swiftlang/swift-package-manager", revision: "swift-5.10-RELEASE"),
         .package(url: "https://github.com/onevcat/Rainbow", from: "4.0.1")
     ],
@@ -18,6 +19,7 @@ let package = Package(
             name: "swift-very",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Shell", package: "Shell"),
                 .product(name: "SwiftPM", package: "swift-package-manager"),
                 .product(name: "Rainbow", package: "Rainbow")
             ]
