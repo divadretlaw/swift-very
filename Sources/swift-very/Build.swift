@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ArgumentParser
+@preconcurrency import ArgumentParser
 import Shell
 import Rainbow
 import Basics
@@ -49,7 +49,7 @@ struct Build: AsyncParsableCommand {
         information.addRow("Swift Version", manifest.toolsVersion.description)
         print(information.render(hideHeaders: true))
         
-        let isXcbeautifyAvailable = XCBeautify.check()
+        let isXcbeautifyAvailable = await XCBeautify.check()
         
         var summary = TextTable(
             header: "Build Summary",

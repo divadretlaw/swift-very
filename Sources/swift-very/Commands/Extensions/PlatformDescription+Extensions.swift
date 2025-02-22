@@ -8,7 +8,7 @@
 import Foundation
 import PackageModel
 
-extension PlatformDescription: CustomStringConvertible {
+extension PlatformDescription: @retroactive CustomStringConvertible {
     var formattedPlatformName: String {
         switch platformName.lowercased() {
         case "ios":

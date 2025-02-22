@@ -1,5 +1,5 @@
 {
-  "originHash" : "84a56060328afc5bd3ca07159f58c9e018e3f25ae0bd6d2c148357b9b1688fa8",
+  "originHash" : "6ad241d50e08db17c5d3acf4dd5c4fed61d3ab3e5eb95e76b337d09da791cc6b",
   "pins" : [
     {
       "identity" : "rainbow",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/divadretlaw/Shell",
       "state" : {
-        "revision" : "241634b444bf6eec4eb95bcfcfb686ced9ab8f29",
-        "version" : "0.2.0"
+        "revision" : "b845b9eb83f2dff3f28d3ad3da4e9aab86d92d7c",
+        "version" : "1.0.0"
       }
     },
     {
@@ -69,8 +69,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-driver.git",
       "state" : {
-        "branch" : "release/5.10",
-        "revision" : "b461fd4fc51be8e1f2a3f4a2184b664b8846b46f"
+        "branch" : "release/6.0",
+        "revision" : "72e785eb253175b091f5ec9125d43cef8fc98c48"
       }
     },
     {
@@ -78,8 +78,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-llbuild.git",
       "state" : {
-        "branch" : "release/5.10",
-        "revision" : "fd7c2e0d9279edd023ced6b0a590f8407f5472f9"
+        "branch" : "release/6.0",
+        "revision" : "f56e1f27b3aecb067b1af56106d7fbe742be0e66"
       }
     },
     {
@@ -87,8 +87,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftlang/swift-package-manager",
       "state" : {
-        "branch" : "swift-5.10-RELEASE",
-        "revision" : "82e3974c7714783bab1da11e29d053422fdfba9a"
+        "branch" : "swift-6.0-RELEASE",
+        "revision" : "5bd155f053b23664a8bb586f625aa9f8fa83ed86"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax.git",
+      "state" : {
+        "branch" : "release/6.0",
+        "revision" : "0687f71944021d616d34d922343dcef086855920"
       }
     },
     {
@@ -105,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-tools-support-core.git",
       "state" : {
-        "branch" : "release/5.10",
-        "revision" : "90bdc2a157ebacc5d3de0c83e085d05d22ca5fa0"
+        "branch" : "release/6.0",
+        "revision" : "3e5d9c81a087832dffba0e4914ceb98caca594ea"
       }
     },
     {

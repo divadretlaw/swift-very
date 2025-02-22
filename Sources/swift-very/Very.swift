@@ -6,13 +6,13 @@
 //
 
 import Foundation
-import ArgumentParser
+@preconcurrency import ArgumentParser
 
 @main
 struct Very: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         abstract: "Swift Package Manager utilities.",
-        version: "0.2.0",
-        subcommands: [Build.self, Reset.self]
+        version: "0.6.0",
+        subcommands: [Build.self, Lint.self, Reset.self]
     )
 }

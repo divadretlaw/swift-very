@@ -29,19 +29,21 @@ struct XcodeBuild: CommandRunnable {
         )
     }
     
-    static func listSchemes(directory: URL? = nil) async throws -> [String] {
-        let xcodebuild = XcodeBuild(
+    static func list(directory: URL? = nil) -> Self {
+        Self.init(
             directory: directory,
             arguments: [ "-list"]
         )
+    }
+    
+    static func listSchemes(directory: URL? = nil) async throws -> [String] {
+        let xcodebuild = list(directory: directory)
         var results: [String] = []
         for try await output in xcodebuild.stream() {
             switch output {
             case let .output(data):
                 if let string = String(data: data, encoding: .utf8) {
-                    fputs(string, Darwin.stdout)
                     results.append(string)
-                    fflush(Darwin.stdout)
                 }
             case let .error(data):
                 if let string = String(data: data, encoding: .utf8) {

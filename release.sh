@@ -1,7 +1,5 @@
 #!/bin/sh
 
-set -e
-
 tag=$1
 
 # Cleanup
@@ -24,7 +22,7 @@ zip swift-very.zip swift-very libSwiftPM.dylib
 
 shasum=`shasum -a 256 swift-very.zip | cut -f1 -d ' '`
 
-gh release delete "$tag" --yes
+# gh release delete "$tag" --yes
 gh release create "$tag" -t "$tag" -n ""
 gh release upload "$tag" swift-very.zip
 

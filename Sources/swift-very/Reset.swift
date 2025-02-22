@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ArgumentParser
+@preconcurrency import ArgumentParser
 
 struct Reset: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
