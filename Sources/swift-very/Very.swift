@@ -12,7 +12,7 @@ import Foundation
 struct Very: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         abstract: "Swift Package Manager utilities.",
-        version: "0.6.0",
-        subcommands: [Build.self, Lint.self, Reset.self]
+        version: "0.7.0",
+        subcommands: [Build.self, Lint.self, Format.self, Reset.self]
     )
 }
