@@ -30,16 +30,27 @@ struct Format: AsyncParsableCommand {
         }
         
         let directory = URL(filePath: path)
+        let files = try FileManager.default.swiftFiles(in: directory)
+        if formatters.contains(.sourceKitten), await Command.isAvailable("sourcekitten") {
+            for file in files {
+                let sourcekitten = Command("sourcekitten", "format", "--file", file.path())
+                try await sourcekitten()
+            }
+        }
+    }
+}
+
+extension FileManager {
+    func swiftFiles(in directory: URL) throws -> [URL] {
+        var result: [URL] = []
         if let enumerator = FileManager.default.enumerator(at: directory, includingPropertiesForKeys: [.isRegularFileKey], options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
             for case let fileURL as URL in enumerator where fileURL.pathExtension == "swift" {
                 let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey])
                 if fileAttributes.isRegularFile! {
-                    if formatters.contains(.sourceKitten), await Command.isAvailable("sourcekitten") {
-                        let sourcekitten = Command("sourcekitten", "format", "--file", fileURL.path())
-                        try await sourcekitten()
-                    }
+                    result.append(fileURL)
                 }
             }
         }
+        return result
     }
 }
