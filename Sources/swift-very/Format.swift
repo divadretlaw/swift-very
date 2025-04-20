@@ -5,8 +5,8 @@
 //  Created by David Walter on 16.03.25.
 //
 
-@preconcurrency import ArgumentParser
 import Foundation
+@preconcurrency import ArgumentParser
 import Shell
 
 struct Format: AsyncParsableCommand {
