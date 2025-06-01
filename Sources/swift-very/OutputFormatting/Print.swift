@@ -6,14 +6,14 @@
 //
 
 import Foundation
-import Rainbow
+import ShellStyle
 
 func printHeader(_ value: String) {
     let header = TextHeader(value)
-    print(header.render().green)
+    print(header.render().foregroundColor(.green))
 }
 
 func printError(_ items: Any..., separator: String = " ", terminator: String = "\n") {
     let string = items.map { "\($0)" }.joined(separator: separator)
-    print("error:".red, string, separator: " ", terminator: terminator)
+    print("error:".foregroundColor(.red), string, separator: " ", terminator: terminator)
 }

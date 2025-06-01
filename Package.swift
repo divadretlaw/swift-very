@@ -10,9 +10,8 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.0"),
-        .package(url: "https://github.com/divadretlaw/Shell", from: "1.0.0"),
-        .package(url: "https://github.com/swiftlang/swift-package-manager", revision: "swift-6.0-RELEASE"),
-        .package(url: "https://github.com/onevcat/Rainbow", from: "4.0.0")
+        .package(url: "https://github.com/divadretlaw/Shell", from: "1.2.0"),
+        .package(url: "https://github.com/swiftlang/swift-package-manager", revision: "swift-6.0-RELEASE")
     ],
     targets: [
         .executableTarget(
@@ -20,8 +19,8 @@ let package = Package(
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Shell", package: "Shell"),
-                .product(name: "SwiftPM", package: "swift-package-manager"),
-                .product(name: "Rainbow", package: "Rainbow")
+                .product(name: "ShellStyle", package: "Shell"),
+                .product(name: "SwiftPM", package: "swift-package-manager")
             ]
         )
     ]

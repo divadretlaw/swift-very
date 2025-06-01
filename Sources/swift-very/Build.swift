@@ -8,7 +8,7 @@
 import Foundation
 @preconcurrency import ArgumentParser
 import Shell
-import Rainbow
+import ShellStyle
 import Basics
 import Workspace
 
